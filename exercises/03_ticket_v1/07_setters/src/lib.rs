@@ -10,22 +10,36 @@ pub struct Ticket {
 }
 
 impl Ticket {
+
+    fn validator(param: &str, obj: &str) {
+        if param == "title" {
+            if obj.is_empty() {
+                panic!("Title cannot be empty");
+            }
+            if obj.len() > 50 {
+                panic!("Title cannot be longer than 50 bytes");
+            }
+        }
+
+        if param == "description" {
+            if obj.is_empty() {
+                panic!("Description cannot be empty");
+            }
+            if obj.len() > 500 {
+                panic!("Description cannot be longer than 500 bytes");
+            }
+        }
+        if param == "status" {
+            if obj != "To-Do" && obj != "In Progress" && obj != "Done" {
+                panic!("Only `To-Do`, `In Progress`, and `Done` statuses are allowed");
+            }
+        }
+
+    }
     pub fn new(title: String, description: String, status: String) -> Ticket {
-        if title.is_empty() {
-            panic!("Title cannot be empty");
-        }
-        if title.len() > 50 {
-            panic!("Title cannot be longer than 50 bytes");
-        }
-        if description.is_empty() {
-            panic!("Description cannot be empty");
-        }
-        if description.len() > 500 {
-            panic!("Description cannot be longer than 500 bytes");
-        }
-        if status != "To-Do" && status != "In Progress" && status != "Done" {
-            panic!("Only `To-Do`, `In Progress`, and `Done` statuses are allowed");
-        }
+        Self::validator("title", &title);
+        Self::validator("description", &description);
+        Self::validator("status", &status);
 
         Ticket {
             title,
@@ -45,6 +59,22 @@ impl Ticket {
     pub fn status(&self) -> &String {
         &self.status
     }
+
+    pub fn set_title(&mut self, new_title: String) {
+        Self::validator("title", &new_title);
+        self.title = new_title
+    }
+
+    pub fn set_description(&mut self, new_description: String) {
+        Self::validator("description", &new_description);
+        self.description = new_description
+    }
+
+    pub fn set_status(&mut self, new_status: String) {
+        Self::validator("status", &new_status);
+        self.status = new_status
+    }
+
 }
 
 #[cfg(test)]
